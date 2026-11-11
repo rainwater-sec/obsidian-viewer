@@ -34,10 +34,15 @@ def ノートの中身を表示(name):
             # (.+?) は間の文字で、置き換え先の \1 にその文字が入る
             リンクに置き換えた中身 = re.sub(r"\[\[(.+?)\]\]", r"<a href='/note/\1'>\1</a>", ノートの中身)
             # Markdown の文字を、HTML の文字に変換する（例：「# 見出し」→「<h1>見出し</h1>」）
-            変換したHTML = markdown(リンクに置き換えた中身)
+            # extensions=["tables"] は、表（| で区切った行）も HTML の表（<table>）に変換させる指定
+            変換したHTML = markdown(リンクに置き換えた中身, extensions=["tables"])
             # スマホの画面の幅に合わせて表示させる指定。これがないと、スマホは全体を縮めて表示するので文字がとても小さくなる
             画面幅の指定 = "<meta name='viewport' content='width=device-width'>"
             # 見た目の指定（CSS）。font-size は文字の大きさ、max-width は横幅の上限、margin: auto は左右の余白を同じにして真ん中に置く
             見た目の指定 = "<style>body { font-size: 18px; max-width: 40em; margin: auto; }</style>"
             return 画面幅の指定 + 見た目の指定 + 変換したHTML
     return "ノートが見つかりません", 404
+
+@app.route("/ping")
+def ping():
+    return "ok"
